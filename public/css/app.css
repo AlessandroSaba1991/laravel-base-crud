@@ -12192,3 +12192,7 @@ main {
   background-repeat: repeat;
 }
 
+main img {
+  aspect-ratio: 1/1.5;
+}
+
