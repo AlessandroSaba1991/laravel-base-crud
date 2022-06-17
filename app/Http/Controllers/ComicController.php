@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Comic;
+use App\Http\Requests\ComicRequest;
 use Illuminate\Http\Request;
 
 class ComicController extends Controller
@@ -31,13 +32,12 @@ class ComicController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  App\Http\Requests\ComicRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ComicRequest $request)
     {
-        $data = $request->all();
-        $data['price'] = floatval(str_replace(',','.',$data['price']));
+        $data = $request->validated();
         Comic::create($data);
         return redirect()->route('comics.index');
     }
@@ -61,19 +61,21 @@ class ComicController extends Controller
      */
     public function edit(Comic $comic)
     {
-        //
+        return view('comics.edit',compact('comic'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  App\Http\Requests\ComicRequest  $request
      * @param  \App\Comic  $comic
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Comic $comic)
+    public function update(ComicRequest $request, Comic $comic)
     {
-        //
+        $data = $request->validated();
+        $comic->update($data);
+        return redirect()->route('comics.show',compact('comic'));
     }
 
     /**
@@ -84,6 +86,7 @@ class ComicController extends Controller
      */
     public function destroy(Comic $comic)
     {
-        //
+        $comic->delete();
+        return redirect()->route('comics.index');
     }
 }
